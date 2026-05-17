@@ -21,70 +21,107 @@ color: #163d8f;
 }
 
 .wrapper {
-max-width: 1200px;
+max-width: 1500px;
 margin: 0 auto;
-padding: 15px;
+padding: 20px;
 }
 
-/* 🟢 MOBILE-FIRST LAYOUT */
+/* 🔥 ZMIANA TUTAJ */
 .hero {
-display: block;
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+
+.sidebar {
+background: rgba(255,255,255,0.75);
+border-radius: 28px;
+padding: 24px;
+box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+position: sticky;
+top: 20px;
 }
 
 .logo {
 font-family: 'Baloo 2', cursive;
-font-size: 42px;
-text-align: center;
+font-size: 72px;
+line-height: 0.9;
 color: #1e4fb2;
 }
 
 .logo span {
 display:block;
 color:#f07c00;
-font-size:30px;
+font-size:56px;
 }
 
 .subtitle {
-text-align:center;
-font-size: 20px;
+font-size: 40px;
 font-weight: 800;
-margin-bottom: 10px;
+line-height: 1;
+margin-top: 10px;
 }
 
-/* 🟢 MAPA POD TYTUŁEM */
-.map-container {
-background:#efe4cf;
-border-radius:20px;
-padding:10px;
+.section { margin-top: 30px; }
+
+.sidebar-image {
+margin-top: 30px;
+text-align: center;
 }
 
-#map {
+.sidebar-image img {
 width: 100%;
-height: 75vh;   /* 🔥 idealne na telefon */
-border-radius:16px;
+max-width: 260px;
+height: auto;
+display: block;
+margin: 0 auto;
 }
 
-/* desktop */
-@media (min-width: 1000px) {
+.map-container {
+position: relative;
+background:#efe4cf;
+border-radius:30px;
+padding:20px;
+box-shadow:0 10px 40px rgba(0,0,0,0.08);
+overflow:hidden;
+}
+
 #map {
-height: 85vh;
-}
+height: 70vh;   /* 🔥 lepsze na telefon */
+min-height: 500px;
+width: 100%;
+border-radius:24px;
 }
 
-/* popup */
+.leaflet-popup-content-wrapper {
+border-radius:18px;
+padding:10px;
+font-family:'Nunito', sans-serif;
+}
+
 .popup-title {
-font-size:16px;
+font-size:18px;
 font-weight:800;
+margin-bottom:8px;
 color:#1e4fb2;
 }
 
 .popup-type {
 display:inline-block;
-padding:5px 10px;
+padding:6px 10px;
 border-radius:999px;
-font-size:12px;
+font-size:13px;
+font-weight:700;
+margin-top:8px;
 color:white;
-margin-top:6px;
+}
+
+.popup-link {
+display:inline-block;
+margin-top:12px;
+font-weight:800;
+color:#f07c00;
+text-decoration:none;
 }
 </style>
 </head>
@@ -92,100 +129,45 @@ margin-top:6px;
 <body>
 
 <div class="wrapper">
+<div class="hero">
 
-<!-- TYTUŁ -->
-<div class="logo">
-Lato <span>z Bogiem</span>
-</div>
+<div class="sidebar">
+<div class="logo">Lato <span>z Bogiem</span></div>
 
 <div class="subtitle">
 Mapa wydarzeń 2026
 </div>
 
-<!-- MAPA -->
+<div class="section">
+<h3>Rodzaj wydarzenia</h3>
+<div class="legend-item"><div class="dot"></div>Spotkanie</div>
+</div>
+
+<div class="section">
+<h3>Zobacz listę wydarzeń</h3>
+<a href="https://docs.google.com/spreadsheets/d/1IAt13h42i94PD5KT82yZYzeTCM5pEZQIb2Gm_wQ2F9A/edit?gid=0#gid=0"
+target="_blank"
+class="popup-link">
+→ Pełna lista wydarzeń
+</a>
+</div>
+
+</div>
+
+<!-- 🔥 MAPA JEST TERAZ POD TYTUŁEM -->
 <div class="map-container">
 <div id="map"></div>
 </div>
 
 </div>
+</div>
 
 <script>
-const polandBounds = [
-[49.8, 13.5],
-[54.0, 24.5]
-];
-
-const map = L.map('map', {
-maxBounds: polandBounds,
-maxBoundsViscosity: 1.0
-});
-
-map.fitBounds(polandBounds, {
-padding: [20, 20],
-animate: false
-});
+const map = L.map('map').setView([52.1, 19.4], 6);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-attribution: '&copy; OpenStreetMap'
+attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-
-const colors = {
-"Spotkanie": "#ef476f",
-"Rekolekcje": "#118ab2",
-"Pielgrzymka": "#06d6a0",
-"Festiwal": "#f07c00",
-"Obóz": "#7a5cc9",
-"Koncert": "#ffd166",
-};
-
-const events = [
-{
-name: "Impreza ŻAR",
-city: "Elbląg",
-coords: [54.152, 19.404],
-type: "Spotkanie",
-start: "14 czerwca 2025",
-link: "#"
-},
-{
-name: "Festiwal Życia",
-city: "Kokotek",
-coords: [50.675, 18.742],
-type: "Festiwal",
-start: "6–12 lipca 2026",
-link: "#"
-}
-];
-
-function createIcon(color) {
-return L.divIcon({
-className: '',
-html: `<div style="background:${color};width:18px;height:18px;border-radius:50%"></div>`,
-iconSize: [18, 18],
-iconAnchor: [9, 9]
-});
-}
-
-events.forEach(e => {
-const marker = L.marker(e.coords, {
-icon: createIcon(colors[e.type] || '#1e4fb2')
-}).addTo(map);
-
-marker.bindPopup(`
-<div class="popup-title">${e.name}</div>
-<div>${e.city}</div>
-<div class="popup-type" style="background:${colors[e.type]}">${e.type}</div>
-`);
-});
-
-window.addEventListener('load', () => {
-setTimeout(() => {
-map.invalidateSize();
-map.fitBounds(polandBounds, {
-padding: [20, 20]
-});
-}, 200);
-});
 </script>
 
 </body>
