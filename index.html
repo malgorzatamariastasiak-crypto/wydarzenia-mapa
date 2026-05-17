@@ -283,10 +283,15 @@ width: 170px;
 </head>
 <body>
 
+
+
 <div class="wrapper">
 <div class="hero">
 
 <div class="sidebar">
+<div class="map-container">
+<div id="map"></div>
+</div>
 <div class="logo">
 Lato
 <span>z Bogiem</span>
@@ -675,32 +680,20 @@ if (layers[event.type]) {
 }
 });
 
-    document.getElementById("filter").addEventListener("change", function(e) {
+document.getElementById("filter").addEventListener("change", function(e) {
   const value = e.target.value;
 
-  // usuń wszystko
   Object.values(layers).forEach(layer => map.removeLayer(layer));
 
   if (value === "all") {
     Object.values(layers).forEach(layer => map.addLayer(layer));
   } else {
-    map.addLayer(layers[value]);
+    if (layers[value]) {
+      map.addLayer(layers[value]);
+    }
   }
 });
 
-marker.bindPopup(`
-<div class="popup-title">${event.name}</div>
-<div><strong>${event.city}</strong></div>
-<div style="margin-top:8px">📅 ${event.start}</div>
-<div class="popup-type" style="background:${colors[event.type]}">
-${event.type}
-</div>
-<br>
-<a class="popup-link" href="${event.link}" target="_blank">
-Przejdź do wydarzenia →
-</a>
-`);
-});
 </script>
 
 </body>
