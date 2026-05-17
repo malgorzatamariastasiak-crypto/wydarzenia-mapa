@@ -277,35 +277,49 @@ class="popup-link"
 
 <script>
 const polandBounds = [
-    [50.3, 14.4], // mniej południa
-    [53.2, 23.5]  // mniej północy
+    [49.8, 13.5],
+    [54.0, 24.5]
 ];
 
 const map = L.map('map', {
-    center: [52.1, 19.4],
-    zoom: 6.4,
-    minZoom: 6.4,
-    maxZoom: 9,
     maxBounds: polandBounds,
-    maxBoundsViscosity: 1.0
+    maxBoundsViscosity: 1.0,
+    zoomControl: true,
+    attributionControl: false
 });
 
-map.fitBounds(polandBounds, {
-    padding: [30, 30],
-    animate: false
-});
+// funkcja dopasowania pod urządzenie
+function setViewResponsive() {
+    const isMobile = window.innerWidth < 768;
 
+    map.fitBounds(polandBounds, {
+        padding: isMobile ? [10, 10] : [40, 40],
+        animate: false
+    });
+
+    // dodatkowy zoom tuning
+    if (isMobile) {
+        map.setZoom(5.8);   // telefon
+    } else {
+        map.setZoom(6.4);   // desktop
+    }
+}
+
+// start mapy
+setViewResponsive();
+
+// poprawka po załadowaniu (ważne dla telefonu)
 window.addEventListener('load', () => {
     setTimeout(() => {
         map.invalidateSize();
-        map.fitBounds(polandBounds, {
-            padding: [30, 30],
-            animate: false
-        });
+        setViewResponsive();
     }, 200);
 });
 
-map.fitBounds(polandBounds);
+// reagowanie na obrót / zmianę rozmiaru ekranu
+window.addEventListener('resize', () => {
+    setViewResponsive();
+});
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 attribution: '&copy; OpenStreetMap contributors'
