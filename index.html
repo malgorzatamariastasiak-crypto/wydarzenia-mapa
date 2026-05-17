@@ -290,6 +290,21 @@ const map = L.map('map', {
     maxBoundsViscosity: 1.0
 });
 
+map.fitBounds(polandBounds, {
+    padding: [30, 30],
+    animate: false
+});
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(polandBounds, {
+            padding: [30, 30],
+            animate: false
+        });
+    }, 200);
+});
+
 map.fitBounds(polandBounds);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
