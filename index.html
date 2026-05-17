@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lato z Bogiem – mapa wydarzeń 2026</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+body {
+margin: 0;
+background: #f5efe3;
+font-family: 'Nunito', sans-serif;
+color: #163d8f;
+}
+
+.wrapper {
+max-width: 1500px;
+margin: 0 auto;
+padding: 20px;
+}
+
+.hero {
+display: grid;
+grid-template-columns: 360px 1fr;
+gap: 20px;
+align-items: start;
+}
+
+.sidebar {
+background: rgba(255,255,255,0.75);
+border-radius: 28px;
+padding: 24px;
+box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+position: sticky;
+top: 20px;
+}
+
+.logo {
+font-family: 'Baloo 2', cursive;
+font-size: 72px;
+line-height: 0.9;
+color: #1e4fb2;
+}
+
+.logo span {
+display:block;
+color:#f07c00;
+font-size:56px;
+}
+
+.subtitle {
+font-size: 40px;
+font-weight: 800;
+line-height: 1;
+margin-top: 10px;
+}
+
+.section {
+margin-top: 30px;
+}
+.sidebar-image {
+margin-top: 30px;
+text-align: center;
+}
+
+.sidebar-image img {
+width: 100%;
+max-width: 260px;
+height: auto;
+display: block;
+margin: 0 auto;
+}
+
+.section h3 {
+font-size: 24px;
+margin-bottom: 14px;
+}
+
+.legend-item {
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:12px;
+font-size:18px;
+font-weight:700;
+}
+
+.dot {
+width:18px;
+height:18px;
+border-radius:50%;
+}
+
+.map-container {
+position: relative;
+background:#efe4cf;
+border-radius:30px;
+padding:20px;
+box-shadow:0 10px 40px rgba(0,0,0,0.08);
+overflow:hidden;
+}
+
+#map {
+height: 860px;
+width: 100%;
+border-radius:24px;
+}
+
+.months {
+display:flex;
+justify-content:space-between;
+margin-top:20px;
+background:white;
+padding:16px 22px;
+border-radius:20px;
+font-weight:800;
+font-size:18px;
+}
+
+.month {
+text-align:center;
+flex:1;
+}
+
+.month span {
+display:block;
+font-size:14px;
+font-weight:600;
+margin-top:6px;
+}
+
+.footer-people {
+position:absolute;
+right:30px;
+bottom:35px;
+display:flex;
+align-items:flex-end;
+gap:18px;
+z-index:999;
+}
+.footer-people {
+position: absolute;
+right: 30px;
+bottom: 120px;
+z-index: 999;
+pointer-events: none;
+}
+
+.footer-people img {
+width: 280px;
+height: auto;
+display: block;
+}
+
+.leaflet-popup-content-wrapper {
+border-radius:18px;
+padding:10px;
+font-family:'Nunito', sans-serif;
+}
+
+.popup-title {
+font-size:18px;
+font-weight:800;
+margin-bottom:8px;
+color:#1e4fb2;
+}
+
+.popup-type {
+display:inline-block;
+padding:6px 10px;
+border-radius:999px;
+font-size:13px;
+font-weight:700;
+margin-top:8px;
+color:white;
+}
+
+.popup-link {
+display:inline-block;
+margin-top:12px;
+font-weight:800;
+color:#f07c00;
+text-decoration:none;
+}
+
+@media (max-width: 1100px) {
+.hero {
+grid-template-columns: 1fr;
+}
+
+.sidebar {
+position:relative;
+}
+
+#map {
+height:700px;
+}
+}
+@media (max-width: 768px) {
+
+.footer-people {
+right: 10px;
+bottom: 90px;
+}
+
+.footer-people img {
+width: 170px;
+}
+
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+<div class="hero">
+
+<div class="sidebar">
+<div class="logo">
+Lato
+<span>z Bogiem</span>
+</div>
+
+<div class="subtitle">
+Mapa wydarzeń 2026
+</div>
+
+<div class="section">
+<h3>Rodzaj wydarzenia</h3>
+
+<div class="legend-item"><div class="dot" style="background:#ef476f"></div>Spotkanie</div>
+<div class="legend-item"><div class="dot" style="background:#118ab2"></div>Rekolekcje</div>
+<div class="legend-item"><div class="dot" style="background:#06d6a0"></div>Pielgrzymka</div>
+<div class="legend-item"><div class="dot" style="background:#f07c00"></div>Festiwal</div>
+<div class="legend-item"><div class="dot" style="background:#7a5cc9"></div>Obóz</div>
+<div class="legend-item"><div class="dot" style="background:#ffd166"></div>Koncert</div>
+</div>
+
+<div class="section">
+<h3>Zobacz listę wydarzeń</h3>
+
+<a 
+href="https://docs.google.com/spreadsheets/d/1IAt13h42i94PD5KT82yZYzeTCM5pEZQIb2Gm_wQ2F9A/edit?gid=0#gid=0" 
+target="_blank"
+class="popup-link"
+>
+→ Pełna lista wydarzeń wraz ze szczegółami
+</a>
+
+</div>
+
+<div class="section sidebar-image">
+    <img src="ludzie2.png" alt="Młodzi ludzie">
+</div>
+</div>
+
+<div class="map-container">
+<div id="map"></div>
+
+
+
+
+</div>
+</div>
+</div>
+
+<script>
+const polandBounds = [
+    [50.3, 14.4], // mniej południa
+    [53.2, 23.5]  // mniej północy
+];
+
+const map = L.map('map', {
+    center: [52.1, 19.4],
+    zoom: 6.4,
+    minZoom: 6.4,
+    maxZoom: 9,
+    maxBounds: polandBounds,
+    maxBoundsViscosity: 1.0
+});
+
+map.fitBounds(polandBounds);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const colors = {
+"Spotkanie": "#ef476f",
+"Rekolekcje": "#118ab2",
+"Pielgrzymka": "#06d6a0",
+"Festiwal": "#f07c00",
+"Obóz": "#7a5cc9",
+"Koncert": "#ffd166",
+};
+
+const events = [
+{
+name: "Impreza ŻAR",
+city: "Elbląg",
+coords: [54.152, 19.404],
+link: "ŻAR",
+start: "14 czerwca 2025",
+type: "Spotkanie"
+},
+{
+name: "Diecezjalne Spotkanie Młodych",
+city: "Skrzatusz",
+coords: [53.141, 16.674],
+link: "Diecezjalne Spotkanie Młodych",
+start: "20–27 września 2025",
+type: "Spotkanie"
+},
+{
+name: "Diecezjalne Dni Młodzieży",
+city: "Rokitno",
+coords: [52.289, 15.767],
+link: "https://centrumddm.pl/wydarzenia/diecezjalne-dni-mlodziezy,56",
+start: "12–13 czerwca 2026",
+type: "Spotkanie"
+},
+{
+name: "Pielgrzymka młodych do Górki Klasztornej",
+city: "Bydgoszcz",
+coords: [53.123, 18.008],
+link: "https://docs.google.com/forms/d/e/1FAIpQLSdpw12N7WDSjH6wo90EKtcLelwCW3KoG4VZQJ0ehc7RC6GuIg/viewform",
+start: "20–21 czerwca 2026",
+type: "Pielgrzymka"
+},
+{
+name: "Licheń młodych",
+city: "Licheń Stary",
+coords: [52.312, 18.365],
+link: "https://www.lichen.pl/kalendarz-wydarzen/#kw",
+start: "20 czerwca 2026",
+type: "Spotkanie"
+},
+{
+name: "Strefa Młodzieży (na Festiwalu Życia)",
+city: "Gdańsk",
+coords: [54.352, 18.646],
+link: "https://festiwaldlazycia.pl/",
+start: "21 czerwca 2026",
+type: "Festiwal"
+},
+{
+name: "Rekolekcje Młodzieżowe Zatrzymanie nad Słowem",
+city: "Skrzatusz",
+coords: [53.141, 16.674],
+link: "https://skrzatusz-sanktuarium.pl/kalendarium/wyswietl/870/rekolekcje-mlodziezowe-zatrzymanie-sie-nad-slowem",
+start: "26–30 czerwca 2026",
+type: "Rekolekcje"
+},
+{
+name: "Obozy Michalickie",
+city: "Sztutowo",
+coords: [54.327, 19.179],
+link: "https://obozy.michalici.pl/kalendarz-obozow-letnich-2026/#",
+start: "28 czerwca – 30 sierpnia 2026",
+type: "Obóz"
+},
+{
+name: "Paradiso",
+city: "Gostyń",
+coords: [51.882, 17.012],
+link: "https://paradiso.org.pl/",
+start: "29 czerwca – 3 lipca 2026",
+type: "Festiwal"
+},
+{
+name: "#STARTERcamp",
+city: "Wrocław",
+coords: [51.107, 17.038],
+link: "https://startercamp.zapisani.pl/formularz",
+start: "29 czerwca – 6 lipca 2026",
+type: "Obóz"
+},
+{
+name: "Wakacje z Bogiem",
+city: "Ustrzyki Górne",
+coords: [49.104, 22.662],
+link: "https://ram.przemyska.pl/2026/05/04/wakacje-z-bogiem-2026-start-zapisow/",
+start: "29 czerwca – 31 sierpnia 2026",
+type: "Rekolekcje"
+},
+{
+name: "Campus Miriam 2026",
+city: "Skulsk",
+coords: [52.482, 18.331],
+link: "https://docs.google.com/forms/d/1feSAt4Vz_7Xw0HC50t5nS4RhUF8quoK4hj_zNspFYSA/viewform?edit_requested=true",
+start: "29 czerwca – 2 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Rekolekcje wakacyjne Wojska Gedeona",
+city: "Beskid Żywiecki",
+coords: [49.57, 19.2],
+link: "https://wojskogedoena.wixsite.com/wojskogedeona",
+start: "29 czerwca – 9 lipca 2026",
+type: "Rekolekcje"
+},
+{
+name: "Sercańskie dni młodych",
+city: "Pliszczyn",
+coords: [51.302, 22.636],
+link: "https://sercanskie.pl/strony/zapraszamy-na-sercanskie-dni-mlodych-",
+start: "29 czerwca – 4 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Festiwal Życia 2026",
+city: "Kokotek",
+coords: [50.675, 18.742],
+link: "https://festiwalzycia.pl",
+start: "6–12 lipca 2026",
+type: "Festiwal"
+},
+{
+name: "Saletyńskie Spotkanie Młodych",
+city: "Dębowiec",
+coords: [49.814, 21.472],
+link: "http://spotkania.saletyni.pl/",
+start: "6–9 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Salwatoriańskie Forum Młodych",
+city: "Dobroszyce",
+coords: [51.268, 17.342],
+link: "https://forummlodych.sds.pl/",
+start: "6–13 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Strefa Young i Strefa Młodych",
+city: "Stary Sącz",
+coords: [49.563, 20.635],
+link: "https://strefachwaly.pl/",
+start: "9–14 lipca 2026",
+type: "Festiwal"
+},
+{
+name: "Max Festiwal",
+city: "Niepokalanów",
+coords: [52.142, 20.326],
+link: "https://maxfestiwal.pl",
+start: "9–13 lipca 2026",
+type: "Festiwal"
+},
+{
+name: "Spotkanie Młodych w Wołczynie",
+city: "Wołczyn",
+coords: [51.018, 18.049],
+link: "Spotkanie Młodych w Wołczynie",
+start: "13–17 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Oaza Dzieci Bożych 2026",
+city: "Zawoja",
+coords: [49.643, 19.542],
+link: "https://www.poznan.oaza.pl/dk/rekolekcje-dla-dzieci-i-mlodziezy-2026",
+start: "17 lipca – 23 sierpnia 2026",
+type: "Obóz"
+},
+{
+name: "Franciszkańskie Spotkanie Młodych",
+city: "Kalwaria Pacławska",
+coords: [49.669, 22.645],
+link: "Franciszkańskie Spotkanie Młodych",
+start: "19–25 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "30. Święto Młodzieży",
+city: "Góra Św. Anny",
+coords: [50.452, 18.172],
+link: "https://docs.google.com/forms/d/e/1FAIpQLSdemStJdqqr3R1uqqvgW5-2gL5-zni48gXM1IeZVLH-xw0cbg/viewform?pli=1",
+start: "20–24 lipca 2026",
+type: "Spotkanie"
+},
+{
+name: "Sercańskie rekolekcje młodzieżowe",
+city: "Gliczarów Górny",
+coords: [49.343, 20.054],
+link: "https://rekolekcje.scj.pl/",
+start: "1–21 sierpnia 2026",
+type: "Rekolekcje"
+},
+{
+name: "Exodus Młodych",
+city: "Zwierzyniec",
+coords: [50.615, 22.975],
+link: "Exodus Młodych",
+start: "18–21 sierpnia 2026",
+type: "Festiwal"
+},
+{
+name: "SMAL",
+city: "Garbów",
+coords: [51.355, 22.338],
+link: "https://smal.lublin.pl/",
+start: "19–23 sierpnia 2026",
+type: "Spotkanie"
+},
+{
+name: "Campo Bosco",
+city: "Czerwińsk nad Wisłą",
+coords: [52.399, 20.310],
+link: "https://www.instagram.com/campo_bosco_official/",
+start: "20–23 sierpnia 2026",
+type: "Rekolekcje"
+},
+{
+name: "Dzień Uwielbienia i Chwały",
+city: "Warszawa",
+coords: [52.229, 21.012],
+link: "https://www.facebook.com/events/939247892002227",
+start: "22 sierpnia 2026",
+type: "Koncert"
+},
+{
+name: "Przystanek Nadzieja",
+city: "Otwock",
+coords: [52.105, 21.261],
+link: "https://xn--festiwalmodziey-7sc50h.pl/aktualnosci",
+start: "27–30 sierpnia 2026",
+type: "Festiwal młodzieżowy"
+},
+{
+name: "Festiwal Mocy 2026",
+city: "Miejsce Piastowe",
+coords: [49.634, 21.784],
+link: "https://festiwalmocy.pl/",
+start: "18–20 września 2026",
+type: "Festiwal"
+},
+{
+name: "wSTAŃiSŁAW",
+city: "Gdynia",
+coords: [54.518, 18.53],
+link: "wSTAŃiSŁAW",
+start: "19 września 2026",
+type: "Spotkanie"
+},
+{
+name: "Apel Młodych Diecezji Radomskiej",
+city: "Mirzec",
+coords: [51.136, 21.052],
+link: "https://www.facebook.com/dmradom",
+start: "19 września 2026",
+type: "Spotkanie"
+},
+{
+name: "Święto Młodych KOSTKA",
+city: "Września",
+coords: [52.325, 17.565],
+link: "",
+start: "19 września 2026",
+type: "Spotkanie"
+},
+{
+name: "Projekt Kostka",
+city: "Złotów",
+coords: [53.363, 17.040],
+link: "https://projektkostka.com/",
+start: "25–27 września 2026",
+type: "Rekolekcje"
+}
+];
+function createIcon(color) {
+return L.divIcon({
+className: '',
+html: `
+<div style="
+background:${color};
+width:24px;
+height:24px;
+border-radius:50% 50% 50% 0;
+transform: rotate(-45deg);
+border:4px solid white;
+box-shadow:0 4px 12px rgba(0,0,0,0.25);
+"></div>
+`,
+iconSize: [24, 24],
+iconAnchor: [12, 24]
+});
+}
+
+events.forEach(event => {
+const marker = L.marker(event.coords, {
+icon: createIcon(colors[event.type] || '#1e4fb2')
+}).addTo(map);
+
+marker.bindPopup(`
+<div class="popup-title">${event.name}</div>
+<div><strong>${event.city}</strong></div>
+<div style="margin-top:8px">📅 ${event.start}</div>
+<div class="popup-type" style="background:${colors[event.type]}">
+${event.type}
+</div>
+<br>
+<a class="popup-link" href="${event.link}" target="_blank">
+Przejdź do wydarzenia →
+</a>
+`);
+});
+</script>
+
+</body>
+</html>
