@@ -25,9 +25,9 @@ color: #163d8f;
 }
 
 .wrapper {
-max-width: 1500px;
-margin: 0 auto;
-padding: 20px;
+    width: 100%;
+    max-width: none;
+    padding: 0;
 }
 
 .hero {
@@ -249,6 +249,18 @@ text-decoration:none;
 
 @media (max-width: 768px) {
 
+  .wrapper {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar {
+    padding: 10px;
+    border-radius: 0;
+  }
+
   .map-container {
     display: none;
   }
@@ -256,7 +268,7 @@ text-decoration:none;
   .mobile-map {
     display: block;
     width: 100%;
-    margin: 20px 0;
+    margin: 15px -10px;
   }
 
   #map-mobile {
