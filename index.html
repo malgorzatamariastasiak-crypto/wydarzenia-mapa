@@ -357,8 +357,8 @@ class="popup-link"
 
 <script>
 const polandBounds = [
-    [50.3, 14.4], // mniej południa
-    [53.2, 23.5]  // mniej północy
+    [50.3, 14.7],
+    [53.2, 24.0]
 ];
 
 const isMobile = window.innerWidth <= 768;
@@ -374,7 +374,7 @@ const map = L.map(mapElementId, {
 });
 
 map.fitBounds(polandBounds, {
-    padding: isMobile ? [5, 5] : [30, 30],
+    padding: isMobile ? [0, 0] : [30, 30],
     animate: false
 });
 
