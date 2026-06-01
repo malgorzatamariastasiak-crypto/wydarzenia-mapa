@@ -243,6 +243,28 @@ text-decoration:none;
     display: none;
   }
 }
+.mobile-map {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  .map-container {
+    display: none;
+  }
+
+  .mobile-map {
+    display: block;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  #map-mobile {
+    width: 100%;
+    height: 70vh;
+  }
+
+}
 </style>
 </head>
 <body>
@@ -260,6 +282,9 @@ Lato
 Mapa wydarzeń 2026
 </div>
 
+<div class="mobile-map">
+  <div id="map-mobile"></div>
+</div>
 
 <div class="section">
 <h3>Rodzaj wydarzenia</h3>
@@ -306,7 +331,9 @@ const polandBounds = [
 
 const isMobile = window.innerWidth <= 768;
 
-const map = L.map('map', {
+const mapElementId = window.innerWidth <= 768 ? 'map-mobile' : 'map';
+
+const map = L.map(mapElementId, {
     center: [52.1, 19.4],
     zoom: isMobile ? 5.4 : 6.4,
     minZoom: isMobile ? 5.2 : 6.4,
