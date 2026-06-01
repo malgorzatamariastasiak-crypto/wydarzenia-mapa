@@ -359,8 +359,6 @@ const polandBounds = [
 ];
 
 const isMobile = window.innerWidth <= 768;
-
-const isMobile = window.innerWidth <= 768;
 const mapElementId = isMobile ? 'map-mobile' : 'map';
 
 const map = L.map(mapElementId, {
@@ -386,8 +384,6 @@ window.addEventListener('load', () => {
         });
     }, 200);
 });
-
-map.fitBounds(polandBounds);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 attribution: '&copy; OpenStreetMap contributors'
