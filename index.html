@@ -334,7 +334,7 @@ href="https://docs.google.com/spreadsheets/d/1IAt13h42i94PD5KT82yZYzeTCM5pEZQIb2
 target="_blank"
 class="popup-link"
 >
-→ Pełna lista wydarzeń wraz ze szczegółami
+📋 Pełna lista wydarzeń wraz ze szczegółami
 </a>
 
 </div>
@@ -360,19 +360,20 @@ const polandBounds = [
 
 const isMobile = window.innerWidth <= 768;
 
-const mapElementId = window.innerWidth <= 768 ? 'map-mobile' : 'map';
+const isMobile = window.innerWidth <= 768;
+const mapElementId = isMobile ? 'map-mobile' : 'map';
 
 const map = L.map(mapElementId, {
     center: [52.1, 19.4],
-    zoom: isMobile ? 5.4 : 6.4,
-    minZoom: isMobile ? 5.2 : 6.4,
+    zoom: isMobile ? 6.1 : 6.4,
+    minZoom: isMobile ? 5.8 : 6.4,
     maxZoom: 9,
     maxBounds: polandBounds,
     maxBoundsViscosity: 1.0
 });
 
 map.fitBounds(polandBounds, {
-    padding: [30, 30],
+    padding: isMobile ? [5, 5] : [30, 30],
     animate: false
 });
 
